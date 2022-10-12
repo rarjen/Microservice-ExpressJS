@@ -74,4 +74,12 @@ module.exports = {
       next(error);
     }
   },
+  changePassword: async (req, res, next) => {
+    try {
+      const user = req.user;
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+    } catch (error) {
+      next(error);
+    }
+  },
 };
