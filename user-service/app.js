@@ -2,12 +2,15 @@ require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const router = require("./routes");
+const methodOverride = require("method-override");
 const port = process.env.HTTP_PORT;
 const app = express();
 
 try {
   app.use(express.json());
   app.use(morgan("dev"));
+  app.set("view engine", "ejs");
+  app.use(methodOverride("_method"));
 
   app.use(router);
 
