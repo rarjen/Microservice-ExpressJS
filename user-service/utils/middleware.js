@@ -1,6 +1,7 @@
 require("dotenv").config;
 const jwt = require("jsonwebtoken");
-const { JWT_KEY } = process.env;
+const { JWT_KEY = "qwerty123" } = process.env;
+
 module.exports = {
   authUser: async (req, res, next) => {
     try {
@@ -8,7 +9,7 @@ module.exports = {
       if (!token) {
         return res.status(401).json({
           status: false,
-          message: "You're not authorized!",
+          message: "notuser",
           data: null,
         });
       }
@@ -17,7 +18,7 @@ module.exports = {
       if (decoded.role != "user") {
         return res.status(401).json({
           status: false,
-          message: "You're not authorized!",
+          message: "lohkok gitu",
           data: null,
         });
       }
@@ -42,7 +43,7 @@ module.exports = {
       if (!token) {
         return res.status(401).json({
           status: false,
-          message: "You're not authorized!",
+          message: "mwkamwma!",
           data: null,
         });
       }
@@ -50,7 +51,7 @@ module.exports = {
       if (decoded.role != "admin") {
         return res.status(401).json({
           status: false,
-          message: "You're not authorized!",
+          message: "hehe!",
           data: null,
         });
       }

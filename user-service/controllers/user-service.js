@@ -19,6 +19,7 @@ module.exports = {
         name,
         email,
         password: encryptPassword,
+        role: "user",
       });
 
       return res.status(201).json({
@@ -58,9 +59,11 @@ module.exports = {
         id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
       };
 
       const token = jwt.sign(payload, JWT_KEY);
+
       return res.status(200).json({
         status: true,
         message: "Success Login",
@@ -78,6 +81,49 @@ module.exports = {
     try {
       const user = req.user;
       const { oldPassword, newPassword, confirmPassword } = req.body;
+      if (newPassword != confirmPassword) {
+        return res.status(400).json({
+          status: false,
+          message: "Password doesn't match",
+          data: null,
+        });
+      }
+
+      const findOne = await User.findOne({ where: { id: user.id } });
+      if (!findOne) {
+        return res.status(400).json({
+          status: false,
+          message: "User Not Found",
+          data: null,
+        });
+      }
+
+      const correct = await bcrypt.compare(oldPassword, findOne.password);
+      if (!correct) {
+        return res.status(401).json({
+          status: false,
+          message: "Old Password doesn't match!",
+          data: null,
+        });
+      }
+
+      const encryptPassword = await bcrypt.hash(newPassword, 10);
+      const updatedPassword = await User.update(
+        {
+          password: encryptPassword,
+        },
+        {
+          where: {
+            id: user.id,
+          },
+        }
+      );
+
+      return res.status(200).json({
+        status: true,
+        message: `Change Password Success to ${user.name}`,
+        data: updatedPassword,
+      });
     } catch (error) {
       next(error);
     }
