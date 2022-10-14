@@ -10,6 +10,7 @@ try {
   app.use(express.json());
   app.use(morgan("dev"));
   app.set("view engine", "ejs");
+  app.use("/public", express.static("public"));
   app.use(methodOverride("_method"));
 
   app.use(router);
